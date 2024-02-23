@@ -80,6 +80,8 @@ function M.update_plugins()
 
 		os.execute("git pull")
 	end
+
+	vim.cmd.redraw()
 end
 
 function M.setup(plugins)
