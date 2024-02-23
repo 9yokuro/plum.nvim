@@ -5,14 +5,23 @@ An extremely minimal plugin manager for Neovim.
 - `git`
 
 ## Installation
-Clone this repository to `$XDG_DATA_HOME/nvim/site/pack/plum/opt/plum.nvim`:
-```console
-git clone https://github.com/9yokuro/plum.nvim.git $XDG_DATA_HOME/nvim/site/pack/plum/opt/plum.nvim
-```
-
-And add the following line to `init.lua`:
+Add the following code to your `init.lua`:
 ```lua
+local plumpath = vim.fn.stdpath("data") .. "/site/pack/plum/start/plum.nvim"
+
+if not vim.loop.fs_stat(plumpath) then
+    vim.fn.system({
+        "git",
+        "clone",
+        "--depth",
+        "1",
+        "https://github.com/9yokuro/plum.nvim.git",
+        plumpath,
+    })
+end
+
 vim.cmd.packadd("plum.nvim")
+
 require("plum").setup({
     "9yokuro/plum.nvim",
 })
