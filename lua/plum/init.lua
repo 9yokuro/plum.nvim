@@ -62,7 +62,9 @@ function M.add_plugin(plugin)
 	vim.cmd.packadd(M.get_file_name(plugin))
 end
 
-function M.remove_plugins(plugins, plugin_dir)
+function M.remove_plugins(plugins)
+	local plugin_dir = M.get_plugin_dir()
+
 	for repository in io.popen("ls " .. plugin_dir):lines() do
 		if not M.contains(M.map(M.get_file_name, plugins), repository) then
 			os.execute("rm -rf " .. plugin_dir .. repository)
@@ -70,7 +72,9 @@ function M.remove_plugins(plugins, plugin_dir)
 	end
 end
 
-function M.update_plugins(pludin_dir)
+function M.update_plugins()
+	local plugin_dir = M.get_plugin_dir()
+
 	for repository in io.popen("ls " .. plugin_dir):lines() do
 		vim.cmd.cd(plugin_dir .. repository)
 
@@ -94,11 +98,11 @@ function M.setup(plugins)
 	end
 
 	vim.api.nvim_create_user_command("PlumUpdate", function()
-		M.update_plugins(plugin_dir)
+		M.update_plugins()
 	end, {})
 
 	vim.api.nvim_create_user_command("PlumClean", function()
-		M.remove_plugins(plugins, pludin_dir)
+		M.remove_plugins(plugins)
 	end, {})
 end
 
