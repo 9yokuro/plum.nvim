@@ -34,17 +34,18 @@ function M.get_plugin_dir()
 	return vim.fn.stdpath("data") .. "/site/pack/plum/opt/"
 end
 
-function M.initialize(plugin_dir)
-	if not M.exists(plugin_dir) then
-		os.execute("mkdir -p " .. plugin_dir)
-	end
-end
-
 function M.clone_repository(plugin_dir, plugin)
 	local plugin_path = plugin_dir .. M.get_file_name(plugin)
 
 	if not M.exists(plugin_path) then
-		os.execute("git clone https://github.com/" .. plugin .. " " .. plugin_path)
+		vim.fn.system({
+			"git",
+			"clone",
+			"--depth",
+			"1",
+			"https://github.com/" .. plugin,
+			plugin_path,
+		})
 	end
 end
 
@@ -57,7 +58,11 @@ function M.remove_plugins(plugins)
 
 	for repository in io.popen("ls " .. plugin_dir):lines() do
 		if not M.contains(M.map(M.get_file_name, plugins), repository) then
-			os.execute("rm -rf " .. plugin_dir .. repository)
+			vim.fn.system({
+				"rm",
+				"-rf",
+				plugin_dir .. repository,
+			})
 		end
 	end
 end
@@ -68,7 +73,10 @@ function M.update_plugins()
 	for repository in io.popen("ls " .. plugin_dir):lines() do
 		vim.cmd.cd(plugin_dir .. repository)
 
-		os.execute("git pull")
+		vim.fn.system({
+			"git",
+			"pull",
+		})
 	end
 
 	vim.cmd.redraw()
@@ -80,8 +88,6 @@ function M.setup(plugins)
 	end
 
 	local plugin_dir = M.get_plugin_dir()
-
-	M.initialize(plugin_dir)
 
 	for i = 1, #plugins do
 		M.clone_repository(plugin_dir, plugins[i])
