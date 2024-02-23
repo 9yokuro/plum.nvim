@@ -10,12 +10,6 @@ function M.contains(array, element)
 	return false
 end
 
-function M.exists(path)
-	local f = io.open(path, "r")
-
-	return f ~= nil and io.close(f)
-end
-
 function M.map(fn, array)
 	local result = {}
 
@@ -37,7 +31,7 @@ end
 function M.clone_repository(plugin_dir, plugin)
 	local plugin_path = plugin_dir .. M.get_file_name(plugin)
 
-	if not M.exists(plugin_path) then
+	if not vim.loop.fs_stat(plugin_path) then
 		vim.fn.system({
 			"git",
 			"clone",
