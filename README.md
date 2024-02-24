@@ -7,7 +7,7 @@ An extremely minimal plugin manager for Neovim.
 ## Installation
 Add the following code to your `init.lua`:
 ```lua
-local plumpath = vim.fn.stdpath("data") .. "/site/pack/plum/start/plum.nvim"
+local plumpath = vim.fn.stdpath("data") .. "/site/pack/plum/opt/plum.nvim"
 
 if not vim.loop.fs_stat(plumpath) then
     vim.fn.system({
