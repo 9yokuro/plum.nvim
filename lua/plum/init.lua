@@ -44,7 +44,16 @@ function M.clone_repository(plugin_dir, plugin)
 end
 
 function M.add_plugin(plugin)
-	vim.cmd.packadd(M.get_file_name(plugin))
+	local group = "plum"
+
+	vim.api.nvim_create_augroup(group, {})
+
+	vim.api.nvim_create_autocmd("VimEnter", {
+		group = group,
+		callback = function()
+			vim.cmd.packadd(M.get_file_name(plugin))
+		end,
+	})
 end
 
 function M.remove_plugins(plugins)
