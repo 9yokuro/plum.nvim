@@ -48,7 +48,7 @@ function M.add_plugin(plugin)
 
 	vim.api.nvim_create_augroup(group, {})
 
-	vim.api.nvim_create_autocmd("VimEnter", {
+	vim.api.nvim_create_autocmd("BufRead", {
 		group = group,
 		callback = function()
 			vim.cmd.packadd(M.get_file_name(plugin))
