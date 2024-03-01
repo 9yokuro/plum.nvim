@@ -1,5 +1,7 @@
 local M = {}
 
+local cmd = vim.cmd
+
 local group = "plum"
 
 vim.api.nvim_create_augroup(group, {})
@@ -52,11 +54,11 @@ function M.add_plugin(plugin, lazy, event)
 		vim.api.nvim_create_autocmd(event, {
 			group = group,
 			callback = function()
-				vim.cmd.packadd(M.get_file_name(plugin))
+				cmd.packadd(M.get_file_name(plugin))
 			end,
 		})
 	else
-		vim.cmd.packadd(M.get_file_name(plugin))
+		cmd.packadd(M.get_file_name(plugin))
 	end
 end
 
@@ -64,7 +66,7 @@ function M.remove_plugins(plugins)
 	local plugin_dir = M.get_plugin_dir()
 
 	for repository in io.popen("ls " .. plugin_dir):lines() do
-		if not M.contains(M.map(M.get_file_name, plugins), repository) then
+		if not M.contains(M.map(M.get_file_name, M.plugin_repos(plugins)), repository) then
 			vim.fn.system({
 				"rm",
 				"-rf",
@@ -74,11 +76,21 @@ function M.remove_plugins(plugins)
 	end
 end
 
+function M.plugin_repos(plugins)
+	local result = {}
+
+	for i = 1, #plugins do
+		table.insert(result, plugins[i].repo)
+	end
+
+	return result
+end
+
 function M.update_plugins()
 	local plugin_dir = M.get_plugin_dir()
 
 	for repository in io.popen("ls " .. plugin_dir):lines() do
-		vim.cmd.cd(plugin_dir .. repository)
+		cmd.cd(plugin_dir .. repository)
 
 		vim.fn.system({
 			"git",
@@ -86,7 +98,7 @@ function M.update_plugins()
 		})
 	end
 
-	vim.cmd.redraw()
+	cmd.redraw()
 end
 
 function M.setup(plugins)
