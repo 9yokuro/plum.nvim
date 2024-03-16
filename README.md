@@ -23,9 +23,7 @@ end
 vim.cmd.packadd("plum.nvim")
 
 require("plum").setup({
-    {
-        "9yokuro/plum.nvim",
-    },
+    "9yokuro/plum.nvim",
 })
 ```
 
@@ -33,15 +31,8 @@ require("plum").setup({
 To install plugins:
 ```lua
 require("plum").setup({
-    {
-        "9yokuro/plum.nvim",
-    },
-
-    {
-        "lambdalisue/fern.vim",
-        lazy = true,
-        event = { "VimEnter", "BufRead", }, -- Default: "VimEnter"
-    },
+    "9yokuro/plum.nvim",
+    "lambdalisue/fern.vim",
 })
 ```
 
